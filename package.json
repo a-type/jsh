@@ -1,0 +1,27 @@
+{
+  "name": "jsh",
+  "version": "0.0.1",
+  "description": "A JavaScript Shell",
+  "main": "shell.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/a-type/jsh.git"
+  },
+  "keywords": [
+    "shell",
+    "commandline"
+  ],
+  "author": "Grant Forrest",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/a-type/jsh/issues"
+  },
+  "homepage": "https://github.com/a-type/jsh#readme",
+  "dependencies": {
+    "bluebird": "^2.9.34",
+    "lodash": "^3.10.1"
+  }
+}
