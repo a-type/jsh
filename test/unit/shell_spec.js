@@ -26,23 +26,52 @@ describe("the shell", function () {
 	});
 
 	describe("accepting input", function () {
-		var input;
+		describe("when configured to echo input", function () {
+			var input;
 
-		before(function () {
-			input = [ "\x09", "a", "b", "c", "\x20" ];
-			input.forEach(function (data) {
-				testStream.send(data);
+			before(function () {
+				input = [ "\x09", "a", "b", "c", "\x20" ];
+				input.forEach(function (data) {
+					testStream.send(data);
+				});
+			});
+
+			after(function () {
+				testStream.clear();
+				shell._reset();
+			});
+
+			it("echoes all input back", function () {
+				input.forEach(function (data, idx) {
+					expect(testStream.output[idx], "output at " + idx).to.equal(data);
+				});
 			});
 		});
 
-		after(function () {
-			testStream.clear();
-			shell._reset();
-		});
+		describe("when configured to not echo input", function () {
+			var input;
+			var testStream;
+			var shell;
 
-		it("echoes all input back", function () {
-			input.forEach(function (data, idx) {
-				expect(testStream.output[idx], "output at " + idx).to.equal(data);
+			before(function () {
+				testStream = new TestStream();
+				shell = new Shell({ echoInput : false });
+
+				testStream.pipe(shell);
+				shell.pipe(testStream);
+				input = [ "\x09", "a", "b", "c", "\x20" ];
+				input.forEach(function (data) {
+					testStream.send(data);
+				});
+			});
+
+			after(function () {
+				testStream.clear();
+				shell._reset();
+			});
+
+			it("does not echo input back", function () {
+				expect(testStream.output.length, "has output").to.equal(0);
 			});
 		});
 	});
