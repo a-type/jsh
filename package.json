@@ -1,6 +1,6 @@
 {
   "name": "jsh",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A JavaScript Shell",
   "main": "lib/shell.js",
   "scripts": {
