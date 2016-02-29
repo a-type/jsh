@@ -21,9 +21,9 @@
   "requireSpacesInsideArrayBrackets"  : "all",
   "disallowSpacesInsideParentheses"   : true,
   "disallowQuotedKeysInObjects"       : "allButReserved",
-  "requireSpaceAfterObjectKeys"       : true,
+  "disallowDanglingUnderscores"       : false,
   "requireCommaBeforeLineBreak"       : true,
-  "requireAlignedObjectValues"        : "skipWithLineBreak",
+  "esnext"                            : true,
 
   "requireOperatorBeforeLineBreak" : [
     "?", "+", "-", "/", "*", "=", "==", "===", "!=", "!==", ">",
@@ -57,7 +57,7 @@
   "disallowMultipleLineStrings" : true,
   "disallowMultipleLineBreaks"  : true,
   "validateLineBreaks"          : "LF",
-  "validateQuoteMarks"          : "\"",
+  "validateQuoteMarks"          : "'",
   "validateIndentation"         : "\t",
   "disallowMixedSpacesAndTabs"  : true,
   "disallowTrailingWhitespace"  : true,
@@ -69,5 +69,4 @@
   "requireDotNotation"             : true,
 
   "excludeFiles" : [ "node_modules/**" ]
-
 }

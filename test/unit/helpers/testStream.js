@@ -1,39 +1,36 @@
-"use strict";
-var Duplex   = require("stream").Duplex;
-var util     = require("util");
+'use strict';
+const Duplex = require('stream').Duplex;
 
-function TestStream () {
-	var self = this;
-	Duplex.call(self);
+export default class TestStream extends Duplex {
+	constructor () {
+		super(arguments);
 
-	self.output = [];
-	self.input = [];
+		this.output = [];
+		this.input = [];
+	}
 
-	self.send = function (data) {
-		if (!self.push(data)) {
-			self.input.push(new Buffer(data, "utf-8"));
+	send (data) {
+		if (!this.push(data)) {
+			this.input.push(new Buffer(data, 'utf-8'));
 		}
-	};
+	}
 
-	self._read = function () {
-		while (self.input.length) {
-			var chunk = self.input.shift();
-			if (!self.push(chunk)) {
+	_read () {
+		while (this.input.length) {
+			var chunk = this.input.shift();
+			if (!this.push(chunk)) {
 				break;
 			}
 		}
-	};
+	}
 
-	self._write = function (data, encoding, next) {
-		self.output.push(data.toString());
+	_write (data, encoding, next) {
+		this.output.push(data.toString());
 
 		next();
-	};
+	}
 
-	self.clear = function () {
-		self.output = [];
-	};
+	clear () {
+		this.output = [];
+	}
 }
-util.inherits(TestStream, Duplex);
-
-module.exports = TestStream;
