@@ -19,6 +19,7 @@ export default class TestProcess extends EventEmitter {
 		this._errOutput = errorOutput || '';
 		this.stdout = new TestStdIO();
 		this.stderr = new TestStdIO();
+		this.stdin = new TestStdIO();
 	}
 
 	run () {

@@ -2,10 +2,18 @@
 import BaseCommand from '../../lib/commands/baseCommand';
 import Shell from '../../lib/shell';
 import TestStream from './helpers/testStream';
+import TestProcess from './helpers/testProcess';
 const streamSpec = require('stream-spec');
 const sinon = require('sinon');
 
 import test from 'ava';
+
+function createMockCommand () {
+	const mockCommand = sinon.createStubInstance(BaseCommand);
+	mockCommand.run.returns(mockCommand);
+	mockCommand._childProcess = new TestProcess();
+	return mockCommand;
+}
 
 test('the shell is a duplex stream', () => {
 	streamSpec(new Shell())
@@ -64,7 +72,7 @@ test('runs commands', (t) => {
 
 	const input = [ 'l', 's', '\r' ];
 
-	const mockCommand = sinon.createStubInstance(BaseCommand);
+	const mockCommand = createMockCommand();
 	mockCommand.run.returns(mockCommand);
 	sandbox.stub(shell, 'createCommand').returns(mockCommand);
 
@@ -90,7 +98,7 @@ test('running chained commands', (t) => {
 
 	const input = [ 'l', 's', ' ', '&', '&', ' ', 'l', 's', '\r' ];
 
-	const mockCommand = sinon.createStubInstance(BaseCommand);
+	const mockCommand = createMockCommand();
 	mockCommand.run.returns(mockCommand);
 	sandbox.stub(shell, 'createCommand').returns(mockCommand);
 
