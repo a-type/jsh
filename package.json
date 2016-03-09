@@ -4,7 +4,8 @@
   "description": "A JavaScript Shell",
   "main": "lib/shell.js",
   "scripts": {
-    "test": "xo && nyc ava && nyc report --reporter=html"
+    "test": "xo && nyc ava && nyc report --reporter=html",
+    "report": "nyc report --reporter=html"
   },
   "repository": {
     "type": "git",

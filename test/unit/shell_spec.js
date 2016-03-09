@@ -3,7 +3,7 @@ import BaseCommand from '../../lib/commands/baseCommand';
 import Shell from '../../lib/shell';
 import TestStream from './helpers/testStream';
 const streamSpec = require('stream-spec');
-const Sinon = require('sinon');
+const sinon = require('sinon');
 
 import test from 'ava';
 
@@ -45,17 +45,27 @@ test('does not echo input when not told', (t) => {
 	});
 });
 
+test('creates commands', (t) => {
+	const shell = new Shell();
+
+	const command = shell.createCommand('ls');
+
+	t.true(command instanceof BaseCommand);
+	t.true(command.base === 'ls');
+});
+
 test('runs commands', (t) => {
 	const testStream = new TestStream();
 	const shell = new Shell();
 	testStream.pipe(shell);
 	shell.pipe(testStream);
 
-	const sandbox = Sinon.sandbox.create();
+	const sandbox = sinon.sandbox.create();
 
 	const input = [ 'l', 's', '\r' ];
 
-	const mockCommand = Sinon.createStubInstance(BaseCommand);
+	const mockCommand = sinon.createStubInstance(BaseCommand);
+	mockCommand.run.returns(mockCommand);
 	sandbox.stub(shell, 'createCommand').returns(mockCommand);
 
 	input.forEach(testStream.send.bind(testStream));
@@ -70,27 +80,35 @@ test('runs commands', (t) => {
 	});
 });
 
-test('accepting command input with escaped characters', (t) => {
+test('running chained commands', (t) => {
 	const testStream = new TestStream();
 	const shell = new Shell();
 	testStream.pipe(shell);
 	shell.pipe(testStream);
 
-	const sandbox = Sinon.sandbox.create();
+	const sandbox = sinon.sandbox.create();
 
-	const input = [ 'l', '\t', '\x01', 's', '\r' ];
+	const input = [ 'l', 's', ' ', '&', '&', ' ', 'l', 's', '\r' ];
 
-	sandbox.spy(shell, 'createCommand');
-	sandbox.stub(BaseCommand.prototype, 'run');
+	const mockCommand = sinon.createStubInstance(BaseCommand);
+	mockCommand.run.returns(mockCommand);
+	sandbox.stub(shell, 'createCommand').returns(mockCommand);
 
 	input.forEach(testStream.send.bind(testStream));
 
 	return TestStream.wait(testStream)
 	.then(() => {
 		t.is(shell.createCommand.callCount, 1);
-		t.is(shell.createCommand.calledWith('ls'), true);
-		t.is(BaseCommand.prototype.run.callCount, 1);
+		t.is(shell.createCommand.calledWith('ls && ls'), true);
 
 		sandbox.restore();
 	});
+});
+
+test('resets the buffer', (t) => {
+	const shell = new Shell();
+	shell.write('foo');
+	shell._reset();
+
+	t.is(shell._buffer, '');
 });
